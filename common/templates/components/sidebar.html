@@ -1,0 +1,36 @@
+<div class="quixnav">
+    <div class="quixnav-scroll">
+        <ul class="metismenu" id="menu">
+            <li class="nav-label first">
+                <hr>
+            </li>
+            
+            <li><a href="{% url 'index' %}"><i class="icon icon-form"></i><span class="nav-text">Tableau de bord</span></a>
+            </li>
+            <li>
+                <a href="{% url 'tables' %}"><i class="icon icon-form"></i><span class="nav-text">Tables</span></a>
+            </li>
+            <li>
+                <a href="{% url 'stock' %}"><i class="icon icon-form"></i><span class="nav-text">Stock</span></a>
+            </li>
+            <li>
+                <a href="cc"><i class="icon icon-form"></i><span class="nav-text">Inventaire</span></a>
+            </li>
+            
+            {% comment %}
+                <li class="nav-label first">
+                    <input type="text" class="rounded form-control" placeholder="recherche">
+                </li>
+                <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon icon-form"></i><span class="nav-text">Dépenses et Charges</span></a>
+                    <ul aria-expanded="false">
+                        <li><a href="r">Dépenses</a></li>
+                        <li><a href="d">Charges fixes</a></li>
+                    </ul>
+                </li>
+            {% endcomment %}
+            
+            
+        </ul>
+    </div>
+</div>

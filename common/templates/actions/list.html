@@ -1,0 +1,97 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load filter %}
+{% block content %}
+
+<div class="row">
+    <div>
+        <div>
+            <h2>{{title}}</h2>
+        </div>
+        <div>
+            
+            {% if request.user.is_superuser %}
+                
+            {% endif %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#basicModal">Ajouter</button>
+        </div>
+    </div>
+    
+    <div class="align-content-end text-end">
+        <!-- Modal -->
+        <div class="modal fade " id="basicModal">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ajouter</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                        </button>
+                    </div>
+                    <form class="text-dark" method="POST"> {% csrf_token %}
+                        <div class="modal-body">
+                            
+                                {{form.as_p}}
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container text-dark">
+                <div class="row">
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-responsive-xl text-dark">
+                                <thead>
+                                    <tr>
+                                        {% for i in fields %}
+                                        	<th>{{ i }}</th>
+                                        {% endfor %}
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        {% autoescape off %}
+                                        	{{ categories|tableFields}}
+                                        {% endautoescape %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+        
+                    
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">suivant</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">dernier &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

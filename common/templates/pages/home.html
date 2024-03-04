@@ -1,0 +1,60 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block index %}
+    <div class="row">
+        {% for table in tables %}
+        	<div class="col-md-4">
+                <a>
+                    {% if table.statut == "Libre" %}
+                        <div class="card shadow rounded bg-success" id="tableCard">
+                    	{% else %}
+                        <div class="card shadow rounded bg-danger" id="tableCard">
+                    {% endif %} 
+                    
+                        <div class="card-header rounded bg-white">
+                            <h4>{{table}}</h4>
+                            {% if table.statut == "Libre" %}
+                                <button type="button" data-toggle="modal" data-target="#exampleModal{{table.id}}" class="btn btn-info btn-sm">Nouvelle vente</button>
+                            	{% else %}
+                                <button type="button" data-toggle="modal" data-target="#exampleModal{{table.id}}" class="btn btn-primary btn-sm">Commande en cours</button>
+                            {% endif %} 
+                        </div>
+                    </div>
+                </a>
+                
+            </div>
+            <div class="modal fade" id="exampleModal{{table.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModal{{table.id}}Label" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModal{{table.id}}Label">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+<style>
+    #tableCard {
+        transition: 1s;
+        width: 100%;
+        height: 70px;
+    }
+    #tableCard:hover {
+        padding: 2px;
+        box-shadow: 5px 10px #888888;
+    }
+</style>
+{% endblock index %}

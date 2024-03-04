@@ -1,0 +1,78 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block index %}
+    <div class="row">
+        <h3>Liste des Tables</h3>
+        <hr>
+        <div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Ajouter</button>
+            
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form m-2" method="POST"> {% csrf_token %}
+                                <div class="m-2 justify-content-between align-content-between">
+                                    <label for="code" class="form-label h4">Numéros de table</label>
+                                    <input type="text" name="code" id="code" class="form-control border-dark text-dark" placeholder="Table N°">
+                                    <hr>
+                                    <input type="submit" value="Valider" class="btn btn-success">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row card rounded shadow m-2 ">
+        <div class="container">
+            <table class="table text-dark">
+                <thead class="rounded shadow">
+                    <tr class="bg-facebook text-white rounded">
+                        <th scope="col">Code</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for table in tables  %}
+                        <tr id="tableHv">
+                            <td>{{table.code}}</td>
+                            <td>{{table.statut}}</td>
+                            <td>{{table.date_created}}</td>
+                            <td>
+                                <div class="justify-content-between align-content-between">
+                                    <a class="btn btn-danger btn-sm text-white">Supprimer</a>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+        #tableHv {
+            transition: 0.2s;
+        }
+        #tableHv:hover {
+            padding: 2px;
+            background-color: #bdbed9;
+        }
+    </style>
+{% endblock index %}

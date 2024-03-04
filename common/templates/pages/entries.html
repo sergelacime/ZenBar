@@ -1,0 +1,124 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block index %}
+    <div class="row">
+        <h3>Entrer de Stock</h3>
+        <hr>
+    </div>
+    <div class="m-2">
+        <form method="POST" class="form "> {% csrf_token %}
+            <div id="container">
+                <div class="cont m-2">
+                    <div class="row ">
+                        <div class="col-md-4">
+                            <label for="prod" class="form-label">Produits</label>
+                            <select name="prod" id="prod" class="form-control  border-dark" onchange="checkDuplicate(this)">
+                                <option>----</option>
+                                {% for produit in produits %}
+                                    <option value="{{produit.id}}">{{produit}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="qte" class="form-label">Nombre de casiers</label>
+                            <input name="qte" id="qte" type="number" class="form-control  border-dark" min="0" value="0" onchange="calculateTotal()" oninput="calculateTotal(); calculateTotalAfterDiscount()">
+                        </div>
+                        <div class="col-md-3 ">
+                            <label for="mtn" class="form-label">Prix d'un casier</label>
+                            <input name="mtn" id="mtn" type="number" class="form-control  border-dark" min="0" value="0" onchange="calculateTotal()"  oninput="calculateTotal(); calculateTotalAfterDiscount()">
+                        </div>
+                        <div class="col-md-2">
+                            <hr>
+                            <a class="btn btn-primary text-white shadow" onclick="duplicate()"><strong>+</strong></a>
+                            <a class="btn btn-danger text-white shadow" onclick="remove(this.parentNode.parentNode.parentNode); calculateTotal(); calculateTotalAfterDiscount()"><strong>-</strong></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-4 justify-content-between align-content-between">
+                    <label for="total" class="form-label">Total :</label>
+                    <input name="total" class="form-control border-dark h1 text-white bg-dark" value=0 type="text" id="total" readonly>
+                </div>
+                <div class="col-md-4 justify-content-between align-content-between">
+                    <label for="remise" class="form-label">Remise obtenue :</label>
+                    <input name="remise" class="form-control border-dark " min=0 value=0 type="number" id="remise" onchange="calculateTotalAfterDiscount()" oninput="calculateTotalAfterDiscount()">
+                </div>
+                <div class="col-md-4 justify-content-between align-content-between">
+                    <hr>
+                    <a class="btn btn-outline-primary shadow" href="{% url 'stock' %}">Annuler</a>
+                    <input class="btn btn-success shadow" type="submit" value="Valider" />
+                </div>
+            </div>
+            
+            <hr>
+            
+            <div class="row m-2">
+                <strong class="h1">Prix total du stock : <code class="h1 text-danger" id="totalWithDiscount">0 Fcfa</code> </strong>
+            </div>
+            
+        </form>
+    </div>
+<script>
+    function duplicate() {
+        var original = document.querySelector('.cont');
+        var clone = original.cloneNode(true);
+        // Réinitialiser les valeurs des champs de quantité et de prix unitaire
+        clone.querySelector('input#qte').value = '0';
+        clone.querySelector('input#mtn').value = '0';
+        document.getElementById('container').appendChild(clone);
+    }
+
+    function remove(element) {
+        var container = document.getElementById('container');
+        if (container.childElementCount > 1) {
+            container.removeChild(element);
+        } else {
+            alert("Vous ne pouvez pas supprimer le dernier élément !");
+        }
+    }
+
+    function calculateTotal() {
+        var total = 0;
+        var rows = document.querySelectorAll('.cont');
+        rows.forEach(function(row) {
+            var qte = row.querySelector('input#qte').value;
+            var prix = row.querySelector('input#mtn').value;
+            total += (parseFloat(qte) || 0) * (parseFloat(prix) || 0);
+        });
+        document.getElementById('total').value = total;
+    }
+    
+    function checkDuplicate(selectElement) {
+        var selectedValue = selectElement.value;
+        var allSelects = document.querySelectorAll('#container .cont select');
+        allSelects.forEach(function(select) {
+            if (select !== selectElement && select.value === selectedValue) {
+                alert("Ce produit a déjà été sélectionné !");
+                selectElement.value = ""; // Reset la sélection pour le select actuel
+                return;
+            }
+        });
+    }
+
+    function calculateTotalAfterDiscount() {
+        var total = parseFloat(document.getElementById('total').value);
+        var remise = parseFloat(document.getElementById('remise').value);
+        var totalAfterDiscount = total - remise;
+        document.getElementById('totalWithDiscount').textContent = totalAfterDiscount + " Fcfa";
+    }
+
+    // Vérifier que la remise est inférieure ou égale au total
+    document.getElementById('remise').addEventListener('input', function() {
+        var total = parseFloat(document.getElementById('total').value);
+        var remise = parseFloat(this.value);
+        if (remise > total) {
+            alert("La remise ne peut pas être supérieure au total !");
+            this.value = total;
+        }
+    });
+</script>
+{% endblock index %}
